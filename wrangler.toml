@@ -1,0 +1,10 @@
+account_id = "335cea005011fda830ddd41621c9b3b4"
+name = "defjosiah"
+type = "webpack"
+workers_dev = false
+route = "*defjosiah.com/*"
+zone_id = "49ec07136b96be28bc23d027c1194525"
+
+[site]
+bucket = "./public"
+entry-point = "packages/worker"

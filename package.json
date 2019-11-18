@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@cloudflare/wrangler": "^1.5.0"
+  }
+}
