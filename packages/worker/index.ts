@@ -1,5 +1,6 @@
 import {} from "@cloudflare/workers-types";
 import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
+import * as mime from "mime";
 
 /**
  * The DEBUG flag will do two things that help during development:
@@ -25,15 +26,27 @@ addEventListener("fetch", event => {
   }
 });
 
-async function handleEvent(event: FetchEvent) {
-  // const url = new URL(event.request.url);
-  let options = {} as any;
+const customMapRequestToAsset = (request: Request) => {
+  const parsedUrl = new URL(request.url);
+  let pathname = parsedUrl.pathname;
+  console.log(pathname);
 
-  /**
-   * You can add custom logic to how we fetch your assets
-   * by configuring the function `mapRequestToAsset`
-   */
-  // options.mapRequestToAsset = handlePrefix(/^\/docs/)
+  // root
+  if (pathname === "/") {
+    pathname = pathname.concat("index.html");
+  } else if (!mime.getType(pathname)) {
+    if (pathname.endsWith("/")) {
+      pathname = pathname.slice(0, pathname.length - 1);
+    }
+    pathname = pathname.concat(".html");
+  }
+  parsedUrl.pathname = pathname;
+  // @ts-ignore
+  return new Request(parsedUrl.toString(), request);
+};
+
+async function handleEvent(event: FetchEvent) {
+  let options = { mapRequestToAsset: customMapRequestToAsset } as any;
 
   try {
     if (DEBUG) {
