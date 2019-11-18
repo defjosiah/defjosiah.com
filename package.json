@@ -5,10 +5,12 @@
   ],
   "scripts": {
     "deploy": "yarn build && wrangler publish",
-    "build": "yarn install && yarn workspaces run build"
+    "build": "yarn install && yarn workspaces run build",
+    "format": "prettier --write '**/*.{ts,tsx}'"
   },
   "devDependencies": {
     "@cloudflare/wrangler": "^1.5.0",
+    "prettier": "^1.19.1",
     "typescript": "^3.7.2"
   }
 }
