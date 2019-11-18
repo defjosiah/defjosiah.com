@@ -3,6 +3,10 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "deploy": "yarn build && wrangler publish",
+    "build": "yarn install && cd packages/site; yarn export"
+  },
   "devDependencies": {
     "@cloudflare/wrangler": "^1.5.0"
   }
