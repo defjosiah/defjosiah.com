@@ -9,7 +9,7 @@ import * as mime from "mime";
  * 2. we will return an error message on exception in your Response rather
  *    than the default 404.html page.
  */
-const DEBUG = true;
+const DEBUG = false;
 
 addEventListener("fetch", event => {
   try {
