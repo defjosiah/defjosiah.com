@@ -5,7 +5,13 @@
   "description": "A template for kick starting a Cloudflare Workers project",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "@cloudflare/kv-asset-handler": "^0.0.5"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^1.0.6"
   }
 }

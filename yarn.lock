@@ -817,6 +817,11 @@
   dependencies:
     mime "^2.4.4"
 
+"@cloudflare/workers-types@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-1.0.6.tgz#f4c74e818a3d935e258ec0b3c0ab6788f0385057"
+  integrity sha512-hmpkFqiRNMkcgUPedOTdM3qIn4sM7k3KvtpmMu0N9mtXlAAFqq44UN8BZp/Ba8vefI8XywS/31ZVpD/bnXIeBA==
+
 "@cloudflare/wrangler@^1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@cloudflare/wrangler/-/wrangler-1.5.0.tgz#90154542dc883d03cbc2372b63aafe4908c77d9d"
@@ -5284,10 +5289,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@3.6.3:
-  version "3.6.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.6.3.tgz#fea942fabb20f7e1ca7164ff626f1a9f3f70b4da"
-  integrity sha512-N7bceJL1CtRQ2RiG0AQME13ksR7DiuQh/QehubYcghzv20tnh+MQnQIuJddTmsbqYj+dztchykemz0zFzlvdQw==
+typescript@^3.7.2:
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.2.tgz#27e489b95fa5909445e9fef5ee48d81697ad18fb"
+  integrity sha512-ml7V7JfiN2Xwvcer+XAf2csGO1bPBdRbFCkYBczNZggrBZ9c7G3riSUeJmqEU5uOtXNPMhE3n+R4FA/3YOAWOQ==
 
 unfetch@4.1.0, unfetch@^4.0.0:
   version "4.1.0"
