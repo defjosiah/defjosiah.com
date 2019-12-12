@@ -55,6 +55,12 @@ async function handleEvent(event: FetchEvent) {
         bypassCache: true
       };
     }
+    await new Promise(resolve => {
+      const timeout = Number(
+        new URL(event.request.url).searchParams.get("delay") || 0
+      );
+      setTimeout(() => resolve(), timeout);
+    });
     return await getAssetFromKV(event, options);
   } catch (e) {
     // if an error is thrown try to serve the asset at 404.html
