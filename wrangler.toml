@@ -4,6 +4,9 @@ type = "webpack"
 workers_dev = false
 route = "*defjosiah.com/*"
 zone_id = "49ec07136b96be28bc23d027c1194525"
+kv-namespaces = [
+	 { binding = "REDIRECTS", id = "66d088ce124f4da5a05290522012ba8a" }
+]
 
 [site]
 bucket = "packages/site/out"

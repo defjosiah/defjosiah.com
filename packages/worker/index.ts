@@ -1,6 +1,10 @@
-import {} from "@cloudflare/workers-types";
+import { KVNamespace } from "@cloudflare/workers-types";
 import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
 import * as mime from "mime";
+
+declare global {
+  const REDIRECTS: KVNamespace;
+}
 
 /**
  * The DEBUG flag will do two things that help during development:
@@ -9,7 +13,7 @@ import * as mime from "mime";
  * 2. we will return an error message on exception in your Response rather
  *    than the default 404.html page.
  */
-const DEBUG = false;
+const DEBUG = true;
 
 addEventListener("fetch", event => {
   try {
@@ -47,7 +51,6 @@ const customMapRequestToAsset = (request: Request) => {
 
 async function handleEvent(event: FetchEvent) {
   let options = { mapRequestToAsset: customMapRequestToAsset } as any;
-
   try {
     if (DEBUG) {
       // customize caching
@@ -55,13 +58,44 @@ async function handleEvent(event: FetchEvent) {
         bypassCache: true
       };
     }
-    await new Promise(resolve => {
-      const timeout = Number(
-        new URL(event.request.url).searchParams.get("delay") || 0
-      );
-      setTimeout(() => resolve(), timeout);
-    });
-    return await getAssetFromKV(event, options);
+    const { pathname } = new URL(event.request.url);
+    console.error(pathname);
+    if (pathname.startsWith("/api")) {
+      if (pathname.startsWith("/api/redirect")) {
+        const method = event.request.method;
+        if (method === "GET") {
+          const allKeys = (await REDIRECTS.list({})).keys.map(x => x.name);
+          const allValues = await Promise.all(
+            allKeys.map(x => REDIRECTS.get(x))
+          );
+          const allPairs = allKeys.map((x, i) => [x, allValues[i]]);
+          return new Response(JSON.stringify(allPairs), {
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*"
+            }
+          });
+        }
+        if (method === "POST") {
+          const requestBody: Array<{
+            from: string;
+            to: string;
+          }> = await event.request.json();
+          // Array<{from: '', to: ''}>
+          await Promise.all(
+            requestBody.map(({ from, to }) => REDIRECTS.put(from, to))
+          );
+          return new Response(JSON.stringify(requestBody), {
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*"
+            }
+          });
+        }
+      }
+    } else {
+      return await getAssetFromKV(event, options);
+    }
   } catch (e) {
     // if an error is thrown try to serve the asset at 404.html
     if (!DEBUG) {
