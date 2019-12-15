@@ -2,11 +2,13 @@ import * as React from "react";
 import Link from "next/link";
 import Layout from "../components/Layout";
 import { useEffect, useState } from "react";
+// import useSWR from "swr";
 
 const AboutPage: React.FunctionComponent = () => {
   const [redirects, setRedirects] = useState<Array<[string, string]>>([]);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+  // const
   const fetchRedirects = async () => {
     const allRedirects = await fetch(`${process.env.API_BASE}/redirect`, {
       headers: { Accept: "application/json" }

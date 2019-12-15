@@ -61,14 +61,23 @@ async function handleEvent(event: FetchEvent) {
     const { pathname } = new URL(event.request.url);
     if (pathname.startsWith("/api")) {
       if (pathname.startsWith("/api/redirect")) {
+        if (pathname === "/api/redirect") {
+          const allKeys = (await REDIRECTS.list({})).keys.map(x => x.name);
+          return new Response(JSON.stringify(allKeys), {
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*"
+            }
+          });
+        }
+        const rest = pathname.substr(0, "/api/redirect".length);
         const method = event.request.method;
         if (method === "GET") {
-          const allKeys = (await REDIRECTS.list({})).keys.map(x => x.name);
-          const allValues = await Promise.all(
-            allKeys.map(x => REDIRECTS.get(x))
-          );
-          const allPairs = allKeys.map((x, i) => [x, allValues[i]]);
-          return new Response(JSON.stringify(allPairs), {
+          const result = await REDIRECTS.get(rest);
+          if (!result) {
+            return new Response(`${rest} key not found.`, { status: 404 });
+          }
+          return new Response(JSON.stringify({ from: rest, to: result }), {
             headers: {
               "Content-Type": "application/json",
               "Access-Control-Allow-Origin": "*"
@@ -76,15 +85,11 @@ async function handleEvent(event: FetchEvent) {
           });
         }
         if (method === "POST") {
-          const requestBody: Array<{
-            from: string;
+          const requestBody: {
             to: string;
-          }> = await event.request.json();
-          // Array<{from: '', to: ''}>
-          await Promise.all(
-            requestBody.map(({ from, to }) => REDIRECTS.put(from, to))
-          );
-          return new Response(JSON.stringify(requestBody), {
+          } = await event.request.json();
+          await REDIRECTS.put(rest, requestBody.to);
+          return new Response(JSON.stringify({ worked: true }), {
             headers: {
               "Content-Type": "application/json",
               "Access-Control-Allow-Origin": "*"
