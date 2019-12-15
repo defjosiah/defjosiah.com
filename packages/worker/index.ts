@@ -59,7 +59,6 @@ async function handleEvent(event: FetchEvent) {
       };
     }
     const { pathname } = new URL(event.request.url);
-    console.error(pathname);
     if (pathname.startsWith("/api")) {
       if (pathname.startsWith("/api/redirect")) {
         const method = event.request.method;
@@ -93,9 +92,14 @@ async function handleEvent(event: FetchEvent) {
           });
         }
       }
-    } else {
-      return await getAssetFromKV(event, options);
     }
+
+    const redirect = await REDIRECTS.get(pathname);
+    if (redirect) {
+      return Response.redirect(redirect);
+    }
+
+    return await getAssetFromKV(event, options);
   } catch (e) {
     // if an error is thrown try to serve the asset at 404.html
     if (!DEBUG) {

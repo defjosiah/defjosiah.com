@@ -26,6 +26,9 @@ const Layout: React.FunctionComponent<Props> = ({
           <a>About</a>
         </Link>{" "}
         |{" "}
+        <Link href="/redirects">
+          <a>Redirects</a>
+        </Link>
       </nav>
     </header>
     {children}

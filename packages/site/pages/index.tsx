@@ -12,6 +12,11 @@ const IndexPage: NextPage = () => {
           <a>About</a>
         </Link>
       </p>
+      <p>
+        <Link href="/redirects">
+          <a>Redirects</a>
+        </Link>
+      </p>
     </Layout>
   );
 };
