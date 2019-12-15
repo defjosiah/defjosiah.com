@@ -70,7 +70,7 @@ async function handleEvent(event: FetchEvent) {
             }
           });
         }
-        const rest = pathname.substr(0, "/api/redirect".length);
+        const rest = pathname.substr("/api/redirect".length);
         const method = event.request.method;
         if (method === "GET") {
           const result = await REDIRECTS.get(rest);
