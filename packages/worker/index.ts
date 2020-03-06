@@ -49,6 +49,20 @@ const customMapRequestToAsset = (request: Request) => {
   return new Request(parsedUrl.toString(), request);
 };
 
+async function writeStuff(writable: WritableStream) {
+  let i = 0;
+  const encoder = new TextEncoder();
+  const writer = writable.getWriter();
+  while (true) {
+    await writer.write(encoder.encode("event: ping\n"));
+    await writer.write(encoder.encode(`data: {"number": ${i}}\n\n`));
+    i++;
+    await new Promise(resolve => {
+      setTimeout(() => resolve(), 5000);
+    });
+  }
+}
+
 async function handleEvent(event: FetchEvent) {
   let options = { mapRequestToAsset: customMapRequestToAsset } as any;
   try {
@@ -60,6 +74,17 @@ async function handleEvent(event: FetchEvent) {
     }
     const { pathname } = new URL(event.request.url);
     if (pathname.startsWith("/api")) {
+      if (pathname.startsWith("/api/sse")) {
+        let { readable, writable } = new TransformStream();
+        writeStuff(writable);
+        return new Response(readable, {
+          headers: {
+            "Cache-Control": "no-cache",
+            "Content-Type": "text/event-stream",
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
+      }
       if (pathname.startsWith("/api/redirect")) {
         if (pathname === "/api/redirect") {
           const allKeys = (await REDIRECTS.list({})).keys.map(x => x.name);
